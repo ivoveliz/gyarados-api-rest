@@ -89,13 +89,14 @@ router.post('/update', async function(req, res, next) {
 
 router.get('/login', async function(req, res, next) {
   const SaveUser=new users({
-    user:req.body.user,
-    email:req.body.email,
-    password:req.body.password,
-    state:req.body.state,
-    role:req.body.role
+    user:req.query.user,
+    email:req.query.email,
+    password:req.query.password,
+    state:req.query.state,
+    role:req.query.role
     })
-    var searchedUser = await users.findOne({ user: req.body.user,password:req.body.password})
+
+    var searchedUser = await users.findOne({ user: req.query.user,password:req.query.password})
 
     // If the device already exists in the database, we add a error message to the session and redirect to the device list
 
@@ -135,6 +136,30 @@ router.get('/login', async function(req, res, next) {
     
   res.send( response);
 });
+
+router.delete('/delete', async function(req, res, next) {
+  if(req.query.confirmation == "true"){
+
+    const doc = await users.findOneAndDelete({ user: req.query.user })
+
+    response={
+    NameUser:req.query.user,
+    StateGroup:"Removed"
+  }
+
+  }else{
+
+    response={
+      NameUser:req.query.user,
+      StateGroup:"Not-Removed"
+    }
+
+  }
+
+ 
+  res.send( response);
+});
+
 module.exports = router;
 
 saveSchema = async function(schema) {

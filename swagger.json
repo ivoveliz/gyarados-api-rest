@@ -1,0 +1,1633 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "BOND-GYARADOS-API",
+    "description": "En esta documentacion encontrara toda la informacion relacionada con la adquicion de informacion para el proyecto bond-gyarados-api y su ulizacion.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://<NameResource>.azurewebsites.net/api/<NameFunction>/<NameOperation>"
+    }
+  ],
+  "tags": [
+    {
+      "name": "users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "organization",
+      "description": "Operations about organization"
+    },
+    {
+      "name": "uplinks",
+      "description": "Operations about uplinks"
+    }
+  ],
+  "paths": {
+    "/api/users/add": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Operation to add users",
+        "description": "Add new users",
+        "operationId": "postAddUser",
+        "requestBody": {
+          "description": "Operation about users",
+          "content": {
+            "add User": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAdd"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseAdd"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Operation to get status users",
+        "description": "Get status users",
+        "operationId": "getLoginUser",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Value for user",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "operator"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "Value for password",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": 123456
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseLogin"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/users/update": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Operation to update users",
+        "description": "Update users",
+        "operationId": "postUpdateUser",
+        "requestBody": {
+          "description": "Operation about users",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "Response Update": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUpdate"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/users/delete": {
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Operation to delete users",
+        "description": "Delete users",
+        "operationId": "postDeleteUser",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Value for user",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "operator"
+            }
+          },
+          {
+            "name": "confirmation",
+            "in": "query",
+            "description": "Confirmation delete",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDelete"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/organization/add": {
+      "post": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Operation to add organization",
+        "description": "post",
+        "operationId": "postOrganizationAdd",
+        "requestBody": {
+          "description": "Operation  to add organization",
+          "content": {
+            "Add Primary Group": {
+              "schema": {
+                "$ref": "#/components/schemas/AddPrimaryGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseAddPrimaryGroup"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/organization/update": {
+      "post": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Operation to update organization",
+        "operationId": "postOrganizationUpdate",
+        "requestBody": {
+          "description": "Operationto update organization",
+          "content": {
+            "Update Primary Group": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePrimaryGroup"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUpdatePrimaryGroup"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/organization/MainPage": {
+      "get": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "get info for organization",
+        "description": "get info for organization",
+        "operationId": "getorganization",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Value for organization",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "MainPage"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseConsultOrganization"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/organization/delete": {
+      "delete": {
+        "tags": [
+          "organization"
+        ],
+        "summary": "Operation to delete organization",
+        "operationId": "postOrganizationDelete",
+        "parameters": [
+          {
+            "name": "NamePrimary",
+            "in": "query",
+            "description": "Value for user",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "operator"
+            }
+          },
+          {
+            "name": "confirmation",
+            "in": "query",
+            "description": "Confirmation delete",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseDeleteGroup"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/uplinks/add": {
+      "post": {
+        "tags": [
+          "uplinks"
+        ],
+        "summary": "Operation about uplinks",
+        "operationId": "postuplinks",
+        "requestBody": {
+          "description": "Operation about uplinks",
+          "content": {
+            "Add Uplinks": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUplinks"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseUplinks"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/uplinks/tableValues": {
+      "get": {
+        "tags": [
+          "uplinks"
+        ],
+        "summary": "get info for uplinks",
+        "description": "get info for uplinks",
+        "operationId": "getuplinks",
+        "parameters": [
+          {
+            "name": "Entity",
+            "in": "query",
+            "description": "Value for entity",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "3ra. Bomba"
+            }
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "description": "Value for state",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "activate"
+            }
+          },
+          {
+            "name": "perpage",
+            "in": "query",
+            "description": "Value for perpage",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": 4
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Value for page",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": 0
+            }
+          },
+          {
+            "name": "fechaDesde",
+            "in": "query",
+            "description": "Value for date",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "20/11/2022-13:37:46"
+            }
+          },
+          {
+            "name": "fechaHasta",
+            "in": "query",
+            "description": "Value for date",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "20/12/2022-13:37:46"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTableUplinks"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/api/uplinks/exportValues": {
+      "get": {
+        "tags": [
+          "uplinks"
+        ],
+        "summary": "get info for uplinks",
+        "description": "get info for uplinks",
+        "operationId": "GetExportUplinks",
+        "parameters": [
+          {
+            "name": "Entity",
+            "in": "query",
+            "description": "Value for entity",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "3ra. Bomba"
+            }
+          },
+          {
+            "name": "State",
+            "in": "query",
+            "description": "Value for state",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "activate"
+            }
+          },
+          {
+            "name": "fechaDesde",
+            "in": "query",
+            "description": "Value for date",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "20/11/2022-13:37:46"
+            }
+          },
+          {
+            "name": "fechaHasta",
+            "in": "query",
+            "description": "Value for date",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "20/12/2022-13:37:46"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTableUplinks"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserAdd": {
+        "required": [
+          "user",
+          "email",
+          "password",
+          "state",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operator"
+          },
+          "email": {
+            "type": "string",
+            "example": "operator@enterprise.com"
+          },
+          "password": {
+            "type": "string",
+            "example": 123456
+          },
+          "state": {
+            "type": "string",
+            "example": "activate"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          }
+        }
+      },
+      "UserUpdate": {
+        "required": [
+          "user",
+          "email",
+          "password",
+          "state",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operator"
+          },
+          "email": {
+            "type": "string",
+            "example": "operator@enterprise.com"
+          },
+          "password": {
+            "type": "string",
+            "example": 123456
+          },
+          "state": {
+            "type": "string",
+            "example": "activate"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          }
+        }
+      },
+      "UserDelete": {
+        "required": [
+          "Confirmation",
+          "user"
+        ],
+        "type": "object",
+        "properties": {
+          "confirmation": {
+            "type": "string",
+            "example": true
+          },
+          "user": {
+            "type": "string",
+            "example": "operator"
+          }
+        }
+      },
+      "LoginUser": {
+        "required": [
+          "user",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operador"
+          },
+          "password": {
+            "type": "string",
+            "example": 123456
+          }
+        }
+      },
+      "ConsultOrganization": {
+        "required": [
+          "Page"
+        ],
+        "type": "object",
+        "properties": {
+          "Page": {
+            "type": "string",
+            "example": "MainPage"
+          }
+        }
+      },
+      "AddPrimaryGroup": {
+        "required": [
+          "action",
+          "NamePrimaryGroup",
+          "IdGroup",
+          "SecondaryGroups"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "add"
+          },
+          "NamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP"
+          },
+          "IdGroup": {
+            "type": "string",
+            "example": "PSP-1"
+          },
+          "SecondaryGroups": {
+            "type": "object",
+            "example": [
+              {
+                "NameSecondaryGroup": "Pozas-MOP-II",
+                "IdSecondaryGroup": "PMP-2",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.120/140",
+                    "IdEntity": "BA-120",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-02",
+                        "IdDevice": "EN-2",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Recursos-Salar",
+                "IdSecondaryGroup": "RS-3",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "3era.Bomba",
+                    "IdEntity": "BA-3",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-05",
+                        "IdDevice": "EN-5",
+                        "State": "activate"
+                      },
+                      {
+                        "NameDevice": "endev-06",
+                        "IdDevice": "EN-6",
+                        "State": "desactivate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Planta-SOP-H",
+                "IdSecondaryGroup": "PSH-1",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.TS-6",
+                    "IdEntity": "BA-6",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-07",
+                        "IdDevice": "EN-7",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "UpdatePrimaryGroup": {
+        "required": [
+          "NamePrimaryGroup",
+          "NewNamePrimaryGroup",
+          "IdGroup",
+          "NewIdGroup",
+          "SecondaryGroups",
+          "NewSecondaryGroups"
+        ],
+        "type": "object",
+        "properties": {
+          "NamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP"
+          },
+          "NewNamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP-2"
+          },
+          "IdGroup": {
+            "type": "string",
+            "example": "PSP-1"
+          },
+          "NewIdGroup": {
+            "type": "string",
+            "example": "PSP-2"
+          },
+          "SecondaryGroups": {
+            "type": "object",
+            "example": [
+              {
+                "NameSecondaryGroup": "Pozas-MOP-II",
+                "IdSecondaryGroup": "PMP-2",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.120/140",
+                    "IdEntity": "BA-120",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-02",
+                        "IdDevice": "EN-2",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Recursos-Salar",
+                "IdSecondaryGroup": "RS-3",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "3era.Bomba",
+                    "IdEntity": "BA-3",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-05",
+                        "IdDevice": "EN-5",
+                        "State": "activate"
+                      },
+                      {
+                        "NameDevice": "endev-06",
+                        "IdDevice": "EN-6",
+                        "State": "desactivate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Planta-SOP-H",
+                "IdSecondaryGroup": "PSH-1",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.TS-6",
+                    "IdEntity": "BA-6",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-07",
+                        "IdDevice": "EN-7",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "NewSecondaryGroups": {
+            "type": "object",
+            "example": [
+              {
+                "NameSecondaryGroup": "Pozas-MOP-II",
+                "IdSecondaryGroup": "PMP-2",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.120/140",
+                    "IdEntity": "BA-120",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-02",
+                        "IdDevice": "EN-2",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Recursos-Salar",
+                "IdSecondaryGroup": "RS-3",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "3era.Bomba",
+                    "IdEntity": "BA-3",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-05",
+                        "IdDevice": "EN-5",
+                        "State": "activate"
+                      },
+                      {
+                        "NameDevice": "endev-06",
+                        "IdDevice": "EN-6",
+                        "State": "desactivate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Planta-SOP-H",
+                "IdSecondaryGroup": "PSH-1",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.TS-6",
+                    "IdEntity": "BA-6",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-07",
+                        "IdDevice": "EN-7",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "DeletePrimaryGroup": {
+        "required": [
+          "confirmation",
+          "NewNamePrimaryGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "confirmation": {
+            "type": "string",
+            "example": true
+          },
+          "NameGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP"
+          }
+        }
+      },
+      "AddUplinks": {
+        "required": [
+          "deviceid",
+          "payloadHex",
+          "ValueDecode",
+          "Entity",
+          "State",
+          "VertionFirmware",
+          "AnalogSignal",
+          "RangeAnalogSignal",
+          "DigitalSignal",
+          "ProcessVariable",
+          "RangeProcessVariable"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceid": {
+            "type": "string",
+            "example": "endev-01"
+          },
+          "payloadHex": {
+            "type": "string",
+            "example": "4B4101006300000000000500000000000000000000000000000000"
+          },
+          "ValueDecode": {
+            "type": "string",
+            "example": 15
+          },
+          "Entity": {
+            "type": "string",
+            "example": "3ra.Bomba"
+          },
+          "State": {
+            "type": "string",
+            "example": "activate"
+          },
+          "VertionFirmware": {
+            "type": "string",
+            "example": "v1.0"
+          },
+          "AnalogSignal": {
+            "type": "string",
+            "example": "MA"
+          },
+          "RangeAnalogSignal": {
+            "type": "string",
+            "example": "4-20"
+          },
+          "DigitalSignal": {
+            "type": "string",
+            "example": "desactivate"
+          },
+          "ProcessVariable": {
+            "type": "string",
+            "example": "m3/h"
+          },
+          "RangeProcessVariable": {
+            "type": "string",
+            "example": "0-150"
+          }
+        }
+      },
+      "GetExportUplinks": {
+        "required": [
+          "action",
+          "Entity",
+          "State",
+          "perpage",
+          "page",
+          "sortBy",
+          "sortDesc",
+          "fechaDesde",
+          "fechaHasta"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "export"
+          },
+          "Entity": {
+            "type": "string",
+            "example": "3ra.Bomba"
+          },
+          "State": {
+            "type": "string",
+            "example": "activate"
+          },
+          "fechaDesde": {
+            "type": "string",
+            "example": "20/11/2022-13:37:46"
+          },
+          "fechaHasta": {
+            "type": "string",
+            "example": "20/12/2022-13:37:46"
+          }
+        }
+      },
+      "GetTableUplinks": {
+        "required": [
+          "action",
+          "entity",
+          "payloadHex",
+          "ValueDecode",
+          "Entity",
+          "State",
+          "VertionFirmware",
+          "AnalogSignal",
+          "RangeAnalogSignal",
+          "DigitalSignal",
+          "ProcessVariable",
+          "RangeProcessVariable"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "example": "tableValues"
+          },
+          "Entity": {
+            "type": "string",
+            "example": "3ra.Bomba"
+          },
+          "State": {
+            "type": "string",
+            "example": "activate"
+          },
+          "perpage": {
+            "type": "string",
+            "example": 4
+          },
+          "page": {
+            "type": "string",
+            "example": 0
+          },
+          "sortBy": {
+            "type": "string",
+            "example": "created_at"
+          },
+          "sortDesc": {
+            "type": "string",
+            "example": true
+          },
+          "fechaDesde": {
+            "type": "string",
+            "example": "20/11/2022-13:37:46"
+          },
+          "fechaHasta": {
+            "type": "string",
+            "example": "20/12/2022-13:37:46"
+          }
+        }
+      },
+      "ResponseUplinks": {
+        "required": [
+          "deviceid",
+          "payloadHex",
+          "ValueDecode",
+          "Entity",
+          "State",
+          "VertionFirmware",
+          "AnalogSignal",
+          "RangeAnalogSignal",
+          "DigitalSignal",
+          "ProcessVariable",
+          "RangeProcessVariable"
+        ],
+        "type": "object",
+        "properties": {
+          "deviceid": {
+            "type": "string",
+            "example": "endev-01"
+          },
+          "payloadHex": {
+            "type": "string",
+            "example": "4B4101006300000000000500000000000000000000000000000000"
+          },
+          "ValueDecode": {
+            "type": "string",
+            "example": 15
+          },
+          "Entity": {
+            "type": "string",
+            "example": "3ra.Bomba"
+          },
+          "State": {
+            "type": "string",
+            "example": "activate"
+          },
+          "VertionFirmware": {
+            "type": "string",
+            "example": "v1.0"
+          },
+          "AnalogSignal": {
+            "type": "string",
+            "example": "MA"
+          },
+          "RangeAnalogSignal": {
+            "type": "string",
+            "example": "4-20"
+          },
+          "DigitalSignal": {
+            "type": "string",
+            "example": "desactivate"
+          },
+          "ProcessVariable": {
+            "type": "string",
+            "example": "m3/h"
+          },
+          "RangeProcessVariable": {
+            "type": "string",
+            "example": "0-150"
+          },
+          "StatusMessage": {
+            "type": "string",
+            "example": "Saved"
+          }
+        }
+      },
+      "ResponseTableUplinks": {
+        "type": "object",
+        "properties": {
+          "Response": {
+            "type": "object",
+            "example": [
+              {
+                "Entity": "3ra. Bomba",
+                "deviceid": "endev-01",
+                "State": "activate",
+                "AnalogSignal": "MA",
+                "RangeAnalogSignal": "4-20",
+                "ProcessVariable": "m3/h",
+                "RangeProcessVariable": "0-150",
+                "LastDate": "20/12/2022-13:43:08.393",
+                "total": 20,
+                "values": [
+                  {
+                    "ValueDecode": "10",
+                    "fecha": "20/12/2022-13:43:08.393"
+                  },
+                  {
+                    "ValueDecode": "10",
+                    "fecha": "20/12/2022-13:39:17.490"
+                  },
+                  {
+                    "ValueDecode": "10",
+                    "fecha": "20/12/2022-13:37:46.734"
+                  },
+                  {
+                    "ValueDecode": "10",
+                    "fecha": "19/12/2022-12:14:39.080"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ResponseAddPrimaryGroup": {
+        "required": [
+          "action",
+          "NamePrimaryGroup",
+          "IdGroup",
+          "SecondaryGroups"
+        ],
+        "type": "object",
+        "properties": {
+          "NamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP"
+          },
+          "IdGroup": {
+            "type": "string",
+            "example": "PSP-1"
+          },
+          "StatusGroup": {
+            "type": "string",
+            "example": "added"
+          },
+          "SecondaryGroups": {
+            "type": "object",
+            "example": [
+              {
+                "NameSecondaryGroup": "Pozas-MOP-II",
+                "IdSecondaryGroup": "PMP-2",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.120/140",
+                    "IdEntity": "BA-120",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-02",
+                        "IdDevice": "EN-2",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Recursos-Salar",
+                "IdSecondaryGroup": "RS-3",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "3era.Bomba",
+                    "IdEntity": "BA-3",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-05",
+                        "IdDevice": "EN-5",
+                        "State": "activate"
+                      },
+                      {
+                        "NameDevice": "endev-06",
+                        "IdDevice": "EN-6",
+                        "State": "desactivate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Planta-SOP-H",
+                "IdSecondaryGroup": "PSH-1",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.TS-6",
+                    "IdEntity": "BA-6",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-07",
+                        "IdDevice": "EN-7",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ResponseUpdatePrimaryGroup": {
+        "required": [
+          "NamePrimaryGroup",
+          "IdGroup",
+          "SecondaryGroups"
+        ],
+        "type": "object",
+        "properties": {
+          "NamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscinas-SOP"
+          },
+          "IdGroup": {
+            "type": "string",
+            "example": "PSP-1"
+          },
+          "StatusGroup": {
+            "type": "string",
+            "example": "updated"
+          },
+          "SecondaryGroups": {
+            "type": "object",
+            "example": [
+              {
+                "NameSecondaryGroup": "Pozas-MOP-II",
+                "IdSecondaryGroup": "PMP-2",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.120/140",
+                    "IdEntity": "BA-120",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-02",
+                        "IdDevice": "EN-2",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Recursos-Salar",
+                "IdSecondaryGroup": "RS-3",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "3era.Bomba",
+                    "IdEntity": "BA-3",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-05",
+                        "IdDevice": "EN-5",
+                        "State": "activate"
+                      },
+                      {
+                        "NameDevice": "endev-06",
+                        "IdDevice": "EN-6",
+                        "State": "desactivate"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NameSecondaryGroup": "Planta-SOP-H",
+                "IdSecondaryGroup": "PSH-1",
+                "EntityAsociated": [
+                  {
+                    "EntityName": "Bba.TS-6",
+                    "IdEntity": "BA-6",
+                    "Devices": [
+                      {
+                        "NameDevice": "endev-07",
+                        "IdDevice": "EN-7",
+                        "State": "activate"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ResponseConsultOrganization": {
+        "type": "object",
+        "properties": {
+          "Response": {
+            "type": "object",
+            "example": [
+              {
+                "NamePrimaryGroup": "Campamento-andino",
+                "IdGroup": "CA-1",
+                "SecondaryGroups": [
+                  {
+                    "NameSecondaryGroup": "Recursos-Salar",
+                    "IdSecondaryGroup": "RS-1",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "3era.Bomba",
+                        "IdEntity": "BA-3",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-01",
+                            "IdDevice": "EN-1",
+                            "State": "activate"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NamePrimaryGroup": "Piscinas-SOP",
+                "IdGroup": "PSP-1",
+                "SecondaryGroups": [
+                  {
+                    "NameSecondaryGroup": "Pozas-MOP-II",
+                    "IdSecondaryGroup": "PMP-2",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "Bba.120/140",
+                        "IdEntity": "BA-120",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-02",
+                            "IdDevice": "EN-2",
+                            "State": "activate"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "NameSecondaryGroup": "Recursos-Salar",
+                    "IdSecondaryGroup": "RS-3",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "3era.Bomba",
+                        "IdEntity": "BA-3",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-05",
+                            "IdDevice": "EN-5",
+                            "State": "activate"
+                          },
+                          {
+                            "NameDevice": "endev-06",
+                            "IdDevice": "EN-6",
+                            "State": "desactivate"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "NameSecondaryGroup": "Planta-SOP-H",
+                    "IdSecondaryGroup": "PSH-1",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "Bba.TS-6",
+                        "IdEntity": "BA-6",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-07",
+                            "IdDevice": "EN-7",
+                            "State": "activate"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "NamePrimaryGroup": "Piscinas-SOP-2",
+                "IdGroup": "PSP-1",
+                "SecondaryGroups": [
+                  {
+                    "NameSecondaryGroup": "Pozas-MOP-II",
+                    "IdSecondaryGroup": "PMP-2",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "Bba.120/140",
+                        "IdEntity": "BA-120",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-02",
+                            "IdDevice": "EN-2",
+                            "State": "activate"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "NameSecondaryGroup": "Recursos-Salar",
+                    "IdSecondaryGroup": "RS-3",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "3era.Bomba",
+                        "IdEntity": "BA-3",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-05",
+                            "IdDevice": "EN-5",
+                            "State": "activate"
+                          },
+                          {
+                            "NameDevice": "endev-06",
+                            "IdDevice": "EN-6",
+                            "State": "desactivate"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "NameSecondaryGroup": "Planta-SOP-H",
+                    "IdSecondaryGroup": "PSH-1",
+                    "EntityAsociated": [
+                      {
+                        "EntityName": "Bba.TS-6",
+                        "IdEntity": "BA-6",
+                        "Devices": [
+                          {
+                            "NameDevice": "endev-07",
+                            "IdDevice": "EN-7",
+                            "State": "activate"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "ResponseDeleteGroup": {
+        "required": [
+          "NamePrimaryGroup",
+          "StatusGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "NamePrimaryGroup": {
+            "type": "string",
+            "example": "Piscina-MOP"
+          },
+          "StatusGroup": {
+            "type": "string",
+            "example": "removed"
+          }
+        }
+      },
+      "ResponseLogin": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operador"
+          },
+          "state": {
+            "type": "string",
+            "example": "activate"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          },
+          "access": {
+            "type": "string",
+            "example": "permited"
+          }
+        }
+      },
+      "ResponseAdd": {
+        "required": [
+          "user",
+          "email",
+          "password",
+          "state",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operator"
+          },
+          "email": {
+            "type": "string",
+            "example": "operator@enterprise.com"
+          },
+          "password": {
+            "type": "string",
+            "example": 123456
+          },
+          "state": {
+            "type": "string",
+            "example": "activate"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          },
+          "statusUser": {
+            "type": "string",
+            "example": "added"
+          }
+        }
+      },
+      "ResponseUpdate": {
+        "required": [
+          "user",
+          "email",
+          "password",
+          "state",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operator"
+          },
+          "email": {
+            "type": "string",
+            "example": "operator@enterprise.com"
+          },
+          "password": {
+            "type": "string",
+            "example": 123456
+          },
+          "state": {
+            "type": "string",
+            "example": "activate"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin"
+          },
+          "statusUser": {
+            "type": "string",
+            "example": "update"
+          }
+        }
+      },
+      "ResponseDelete": {
+        "required": [
+          "user",
+          "email",
+          "password",
+          "state",
+          "role"
+        ],
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "operator"
+          },
+          "statusUser": {
+            "type": "string",
+            "example": "delete"
+          }
+        }
+      }
+    }
+  }
+}

@@ -46,16 +46,17 @@ router.post('/add', async function(req, res, next) {
         res.send( response);
   });
   
-  router.get('/tableValues', async function(req, res, next) {
+router.get('/tableValues', async function(req, res, next) {
     count=0
     responseValue=[]
     let TotalConsult
-    if(req.body.page=="0"){
-        TotalConsult =await uplink.find({ Entity: req.body.entity }).countDocuments();
+
+    if(req.query.page=="0"){
+        TotalConsult =await uplink.find({ Entity: req.query.Entity }).countDocuments();
         
        }
     
-const ResponseDB = await uplink.find({ Entity: req.body.entity }).sort({ _id: -1 }).skip(req.body.page*req.body.perpage).limit(req.body.perpage)
+const ResponseDB = await uplink.find({ Entity: req.query.Entity }).sort({ _id: -1 }).skip(req.query.page*req.query.perpage).limit(req.query.perpage)
 
 for (const item of ResponseDB ) 
 {
@@ -67,7 +68,8 @@ fecha4= moment.utc(fecha4).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SS
 responseValue.push({ValueDecode:ValueDecode,fecha:fecha4});  
 count++;
     }
-
+    
+    
 
 response={
 Entity:ResponseDB[0].Entity,
@@ -89,9 +91,9 @@ values:responseValue
     count=0
 responseValue=[]
 let TotalConsult
-    TotalConsult =await uplink.find({ Entity: req.body.Entity }).countDocuments();
+    TotalConsult =await uplink.find({ Entity: req.query.Entity }).countDocuments();
             
-    const ResponseDB = await uplink.find({ Entity: req.body.Entity }).sort({ _id: -1 })
+    const ResponseDB = await uplink.find({ Entity: req.query.Entity }).sort({ _id: -1 })
     
     for (const item of ResponseDB ) 
     {

@@ -10,6 +10,7 @@ router.post('/add', async function(req, res, next) {
   const SaveOrganization=new organization({
     NamePrimaryGroup:req.body.NamePrimaryGroup,
     IdGroup:req.body.IdGroup,
+    AmountGroup:req.body.AmountGroup,
     SecondaryGroups:req.body.SecondaryGroups
     })
     var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.NamePrimaryGroup,IdGroup:req.body.IdGroup})
@@ -73,21 +74,53 @@ router.post('/update', async function(req, res, next) {
 
         res.send( response);
 });
+router.delete('/delete', async function(req, res, next) {
+
+  if(req.query.confirmation == "true"){
+
+    const doc = await organization.findOneAndDelete({NamePrimaryGroup: req.query.NamePrimaryGroup})
+
+    response={
+      NamePrimaryGroup: req.query.NamePrimaryGroup,
+      
+        StateGroup:"removed"
+  }
+
+  }else{
+
+    response={
+      NamePrimaryGroup: req.query.NamePrimaryGroup,
+     
+      StateGroup:"Not-Removed"
+    }
+
+  }
+        res.send( response);
+});
 
 router.get('/MainPage', async function(req, res, next) {
   let responseGet=[]
+  let count=0
+  let countsecondary=0
   var searchedOrganization = await organization.find()
   //var searchedOrganization1 = await organization.find()
   // console.log(searchedOrganization)
   searchedOrganization.forEach((rateName) => {   
+  count++;
   let NamePrimaryGroup=rateName.NamePrimaryGroup
   let IdGroup=rateName.IdGroup
   let SecondaryGroups=rateName.SecondaryGroups
-  responseGet.push({NamePrimaryGroup,IdGroup,SecondaryGroups})
+  let AmountGroup=rateName.AmountGroup
+  responseGet.push({NamePrimaryGroup,IdGroup,SecondaryGroups,AmountGroup,id:count})
      });
-
-     res.send( responseGet);
+     let data={
+      data:responseGet,
+      total:count
+     }
+     res.send(data);
 });
+
+
 module.exports = router;
 
 saveSchema = async function(schema) {

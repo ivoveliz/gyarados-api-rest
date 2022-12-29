@@ -10,6 +10,10 @@ const organizationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    AmountGroup: {
+        type: String,
+        required: true
+    },
     SecondaryGroups: {
         type: Object,
         required: true

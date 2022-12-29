@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/e6499d9a-e8cf-49e4-bbd3-4e65dd5d9836/location/eastus/subscriptions/e6499d9a-e8cf-49e4-bbd3-4e65dd5d9836/resourceGroups/sqm-arquitectura-gyarados/providers/Microsoft.Web/sites/apirest-sqm-gyarados",
+    "appService.deploySubpath": "."
+}
