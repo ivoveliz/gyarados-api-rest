@@ -140,48 +140,67 @@ let TotalConsult
 
     const ConsultDateToday=moment.utc(TimeStampToday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
     const ConsultDateYesterday=moment.utc(TimeStampYesterday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
-
-    const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
+    
+    //const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
+    const keepAliveListTable = await uplink.find({Entity: req.query.Entity })
  
+    if(keepAliveListTable){     
+        for (const item of keepAliveListTable) 
+        {
+            count++;
+        let fechaT = item.created_at;
+            
+        let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+        let ValueDecodeTote =item.ValueDecodeTote*200
+         
+        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
     
-    for (const item of keepAliveListTable) 
-    {
-        count++;
-    let fecha4 = item.created_at;
+        data1.push([fechaT, ValueDecodeInstant])
+        data2.push([fechaT, ValueDecodeTote])
+        TableValues.push({ date:fechaC, ValueDecodeInstant,ValueDecodeTote,count });
+        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
         
-    let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
-    let ValueDecodeTote =item.ValueDecodeTote*200
-     
-    fecha4= moment.utc(fecha4).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
-
-    data1.push([fecha4, ValueDecodeInstant])
-    data2.push([fecha4, ValueDecodeTote])
-    TableValues.push({ date:fecha4, ValueDecodeInstant,ValueDecodeTote,count });
-    //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
     
-
+            }
+        series.push({name: 'Value m3/h :', data:data1})
+        series2.push({name: 'Value m3/h :', data:data2})
+      
+        DataChart.series=series
+        DataChartTotalize.series=series2
+        const Entity=keepAliveListTable[0].Entity
+        const deviceid=keepAliveListTable[0].deviceid
+        const State=keepAliveListTable[0].State
+        const AnalogSignal=keepAliveListTable[0].AnalogSignal
+        const RangeAnalogSignal=keepAliveListTable[0].RangeAnalogSignal
+        const ProcessVariable=keepAliveListTable[0].ProcessVariable
+        const RangeProcessVariable=keepAliveListTable[0].RangeProcessVariable
+        
+        response={
+        Entity:Entity,
+        deviceid:deviceid,
+        State:State,
+        AnalogSignal:AnalogSignal,
+        RangeAnalogSignal:RangeAnalogSignal,
+        ProcessVariable:ProcessVariable,
+        RangeProcessVariable:RangeProcessVariable,
+        ConsultDateToday:ConsultDateToday,
+        ConsultDateYesterday:ConsultDateYesterday,
+        total:count,
+        TableValues:TableValues,
+        DataChart:DataChart,
+        DataChartTotalize:DataChartTotalize
+        
+        } 
+           
+        }else{
+    
+         
+            response ={
+             Error:"dont entity register"
+    
+            }
         }
-    series.push({name: 'Value m3/h :', data:data1})
-    series2.push({name: 'Value m3/h :', data:data2})
-  
-    DataChart.series=series
-    DataChartTotalize.series=series2
-    response={
-    Entity:keepAliveListTable[0].Entity,
-    deviceid:keepAliveListTable[0].deviceid,
-    State:keepAliveListTable[0].State,
-    AnalogSignal:keepAliveListTable[0].AnalogSignal,
-    RangeAnalogSignal:keepAliveListTable[0].RangeAnalogSignal,
-    ProcessVariable:keepAliveListTable[0].ProcessVariable,
-    RangeProcessVariable:keepAliveListTable[0].RangeProcessVariable,
-    ConsultDateToday:ConsultDateToday,
-    ConsultDateYesterday:ConsultDateYesterday,
-    total:count,
-    TableValues:TableValues,
-    DataChart:DataChart,
-    DataChartTotalize:DataChartTotalize
-    
-    }
+
        res.send( response);
   });
   module.exports = router;
