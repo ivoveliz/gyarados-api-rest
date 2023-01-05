@@ -3,6 +3,7 @@ var router = express.Router();
 const { uplink } = require('../models/index')
 const moment = require( 'moment-timezone' )
 let response
+ 
 /* GET home page. */
 
 router.post('/add', async function(req, res, next) {
@@ -117,6 +118,68 @@ let TotalConsult
     RangeProcessVariable:ResponseDB[0].RangeProcessVariable,
     total:TotalConsult,
     values:responseValue
+    
+    }
+       res.send( response);
+  });
+
+  router.get('/DailyValues', async function(req, res, next) {
+    console.log(req.query)
+    count=0
+    responseValue=[]
+    let TotalConsult
+    const series=[]
+    const series2=[]
+    const data1=[]
+    const data2=[]
+    const DataChart={}
+    const DataChartTotalize={}
+    const TableValues=[]
+    const TimeStampToday=Date.now()
+    const TimeStampYesterday= Math.round(TimeStampToday-86400000)
+
+    const ConsultDateToday=moment.utc(TimeStampToday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    const ConsultDateYesterday=moment.utc(TimeStampYesterday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+
+    const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
+ 
+    
+    for (const item of keepAliveListTable) 
+    {
+        count++;
+    let fecha4 = item.created_at;
+        
+    let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+    let ValueDecodeTote =item.ValueDecodeTote*200
+     
+    fecha4= moment.utc(fecha4).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+
+    data1.push([fecha4, ValueDecodeInstant])
+    data2.push([fecha4, ValueDecodeTote])
+    TableValues.push({ date:fecha4, ValueDecodeInstant,ValueDecodeTote,count });
+    //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+    
+
+        }
+    series.push({name: 'Value m3/h :', data:data1})
+    series2.push({name: 'Value m3/h :', data:data2})
+  
+    DataChart.series=series
+    DataChartTotalize.series=series2
+    response={
+    Entity:keepAliveListTable[0].Entity,
+    deviceid:keepAliveListTable[0].deviceid,
+    State:keepAliveListTable[0].State,
+    AnalogSignal:keepAliveListTable[0].AnalogSignal,
+    RangeAnalogSignal:keepAliveListTable[0].RangeAnalogSignal,
+    ProcessVariable:keepAliveListTable[0].ProcessVariable,
+    RangeProcessVariable:keepAliveListTable[0].RangeProcessVariable,
+    ConsultDateToday:ConsultDateToday,
+    ConsultDateYesterday:ConsultDateYesterday,
+    total:count,
+    TableValues:TableValues,
+    DataChart:DataChart,
+    DataChartTotalize:DataChartTotalize
     
     }
        res.send( response);

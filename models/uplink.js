@@ -10,7 +10,11 @@ const uplinkSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    ValueDecode: {
+    ValueDecodeInstant: {
+        type: String,
+        required: true
+    },
+    ValueDecodeTote: {
         type: String,
         required: true
     },
