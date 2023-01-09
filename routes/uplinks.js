@@ -89,38 +89,60 @@ values:responseValue
   });
 
   router.get('/exportValues', async function(req, res, next) {
-    count=0
-responseValue=[]
-let TotalConsult
-    TotalConsult =await uplink.find({ Entity: req.query.Entity }).countDocuments();
-            
-    const ResponseDB = await uplink.find({ Entity: req.query.Entity }).sort({ _id: -1 })
-    
-    for (const item of ResponseDB ) 
-    {
-    let fecha4 = item.created_at;
-        
-    let ValueDecode=item.ValueDecode
-        
-    fecha4= moment.utc(fecha4).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
-    responseValue.push({ValueDecode:ValueDecode,fecha:fecha4});  
-    count++;
-        }
-    
-    
-    response={
-    Entity:ResponseDB[0].Entity,
-    deviceid:ResponseDB[0].deviceid,
-    State:ResponseDB[0].State,
-    AnalogSignal:ResponseDB[0].AnalogSignal,
-    RangeAnalogSignal:ResponseDB[0].RangeAnalogSignal,
-    ProcessVariable:ResponseDB[0].ProcessVariable,
-    RangeProcessVariable:ResponseDB[0].RangeProcessVariable,
-    total:TotalConsult,
-    values:responseValue
-    
+    const DataExportPdf=[]
+    const DataExportCsv=[]
+    let DateDesde
+    let DateHasta
+    console.log(req.query)
+    let DateExport =req.query.RangeDate
+    if(DateExport){
+        DateExport = DateExport.split("to")
+        DateDesde=moment(DateExport [0]).format('x');
+        console.log("desde",DateExport [0])
+        DateHasta=moment(DateExport [1]).format('x');
+        console.log("hasta",DateExport [1])
+        console.log("desde",DateDesde)
+        console.log("hasta",DateHasta)
+    }else{
+        DateHasta = Date.now() 
+        DateDesde= Math.round(DateHasta-86400000)  
+      
+      
+        console.log(DateHasta)
     }
-       res.send( response);
+   
+    
+    const keepAliveListTable = await uplink.find({created_at:{ "$gt": DateDesde, "$lt": DateHasta},Entity: req.query.Entity }).sort({ _id: -1 })
+    //console.log(DateDesde)
+    if(keepAliveListTable){     
+        for (const item of keepAliveListTable) 
+        {
+            count++;
+        let fechaT = item.created_at;
+            
+        let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+        let ValueDecodeTote =item.ValueDecodeTote*200
+         
+        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+        DataExportPdf.push([fechaC,ValueDecodeInstant,ValueDecodeTote])
+        DataExportCsv.push({Date:fechaC,Instant:ValueDecodeInstant,Totalizer:ValueDecodeTote})
+        //data2.push([fechaT, ValueDecodeTote])
+        //TableValues.push({ date:fechaC, ValueDecodeInstant,ValueDecodeTote,count });
+        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+  
+            }
+        }
+        DateConsult = Date.now() 
+        DateConsult =moment.utc(DateConsult ).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+         
+         
+        response={
+            DataExportPdf:DataExportPdf,
+            DataExportCsv:DataExportCsv,
+            DateConsult:DateConsult
+        }
+       res.send(response);
   });
 
   router.get('/DailyValues', async function(req, res, next) {
