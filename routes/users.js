@@ -95,8 +95,8 @@ router.get('/login', async function(req, res, next) {
     state:req.query.state,
     role:req.query.role
     })
-
-    var searchedUser = await users.findOne({ user: req.query.user,password:req.query.password})
+ console.log(req.query)
+    var searchedUser = await users.findOne({ email: req.query.email,password:req.query.password})
 
     // If the device already exists in the database, we add a error message to the session and redirect to the device list
 
@@ -104,13 +104,30 @@ router.get('/login', async function(req, res, next) {
 
 
       if(searchedUser.state=="activate"){
+        
         //response =`Usuario ${searchedUser.user} ya se encuentra registrado`
         response={
-        user:searchedUser.user,
-        state:searchedUser.state,
-        role:searchedUser.role,
-        access:"permitted"
+          userData: {
+            id: 1,
+            fullName: "Ivo Veliz",
+            username: "Ivoveliz",
+            avatar: "require('@/assets/images/avatars/13-small.png')",
+            email: "admin@demo.com",
+            role: "admin",
+            ability: [
+                {
+                    action: "manage",
+                    subject: "all"
+                }
+            ],
+            extras: {
+                "eCommerceCartItemsCount": 5
+            }
+        },
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.GtJvLZvyaHC9SjG06gjYx55PJrhkCPb8PVm5NY5S8aU",
+        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.7ppXQA-dJzAP8eA5dIs3yLZQmKZ74PMqJnonTmevF18"
         }
+        
         
     }else{
         
