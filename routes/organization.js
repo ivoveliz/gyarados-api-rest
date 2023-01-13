@@ -7,18 +7,27 @@ let response
 
 /* GET home page. */
 router.post('/add', async function(req, res, next) {
+  
+  const data = req.body.MainGroupAdded.avatarGroup
+  const split = data.split(','); // or whatever is appropriate here. this will work for the example given
+  const base64string = split[1];
+  const buffer = Buffer.from(base64string, 'base64');
+  const buffer2= buffer.toString('base64')
+  //category.img.data = buffer;
+  //console.log(Buffer.from(buffer, 'base64').toString('ascii'))
   const SaveOrganization=new organization({
-    NamePrimaryGroup:req.body.NamePrimaryGroup,
-    IdGroup:req.body.IdGroup,
-    AmountGroup:req.body.AmountGroup,
-    SecondaryGroups:req.body.SecondaryGroups
+    NamePrimaryGroup:req.body.MainGroupAdded.NamePrimaryGroup,
+    IdGroup:req.body.MainGroupAdded.IdGroup,
+    AmountGroup:"3",
+    SecondaryGroups:req.body.MainGroupAdded.SecondaryGroups,
+    image:buffer
     })
     var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.NamePrimaryGroup,IdGroup:req.body.IdGroup})
     
     if(searchedOrganization){     
     response={
-        NamePrimaryGroup:searchedOrganization.NamePrimaryGroup,
-        IdGroup:searchedOrganization.IdGroup,
+      NamePrimaryGroup:req.body.MainGroupAdded.NamePrimaryGroup,
+      IdGroup:req.body.MainGroupAdded.IdGroup,
         StateGroup:"exists"
 
                }   
@@ -26,12 +35,15 @@ router.post('/add', async function(req, res, next) {
     }else{
 
         if((error = await saveSchema(SaveOrganization)) != true) {
-            context.log("await")
-            context.log(error)
-            context.done()
+            console.log("await")
+            console.log(error)
+            
             response ="primer grupo no registrado"
         }
+        let buffer3='data:image/png;base64,'+buffer2
         response ={
+          buffer2:buffer3,
+          base:req.body.MainGroupAdded.avatarGroup,
             NamePrimaryGroup: req.body.NamePrimaryGroup,
             IdGroup:req.body.IdGroup,
             SecondaryGroups:req.body.SecondaryGroups,
@@ -107,15 +119,26 @@ router.get('/MainPage', async function(req, res, next) {
   // console.log(searchedOrganization)
   searchedOrganization.forEach((rateName) => {   
   count++;
+  
   let NamePrimaryGroup=rateName.NamePrimaryGroup
   let IdGroup=rateName.IdGroup
   let SecondaryGroups=rateName.SecondaryGroups
   let AmountGroup=rateName.AmountGroup
-  responseGet.push({NamePrimaryGroup,IdGroup,SecondaryGroups,AmountGroup,id:count})
+  let buffer4=rateName.image
+  buffer4= buffer4.toString('base64')
+  let buffer5='data:image/png;base64,'+buffer4
+  responseGet.push({NamePrimaryGroup,IdGroup,SecondaryGroups,AmountGroup,id:count,buffer5})
      });
+
+    
+    //  var base64data =searchedOrganization[2]
+    //  base64data.image.toString('base64')
+   
      let data={
       data:responseGet,
-      total:count
+      total:count,
+   
+    
      }
      res.send(data);
 });

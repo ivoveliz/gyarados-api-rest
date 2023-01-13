@@ -1,9 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const { users } = require('../models/index')
+var jwt=require('jsonwebtoken')
 let response
-
-
+const accessToken=""
+const refreshToken=""
+const jwtConfig = {
+  secret: 'dd5f3089-40c3-403d-af14-d0c228b05cb4',
+  refreshTokenSecret: '7c4c1c50-3230-45bf-9eae-c9b2e401c767',
+  expireTime: '10m',
+  refreshTokenExpireTime: '10m',
+}
 
 /* GET users listing. */
 router.post('/add', async function(req, res, next) {
@@ -95,6 +102,8 @@ router.get('/login', async function(req, res, next) {
     state:req.query.state,
     role:req.query.role
     })
+
+    
  console.log(req.query)
     var searchedUser = await users.findOne({ email: req.query.email,password:req.query.password})
 
@@ -104,16 +113,26 @@ router.get('/login', async function(req, res, next) {
 
 
       if(searchedUser.state=="activate"){
-        
+        try {
+   
+           accessToken = jwt.sign({ id: 1 }, jwtConfig.secret, { expiresIn: jwtConfig.expireTime })
+           refreshToken = jwt.sign({ id: 1 }, jwtConfig.refreshTokenSecret, {
+            expiresIn: jwtConfig.refreshTokenExpireTime,
+          })
+    // console.log("accesstoken",accessToken)
+    // console.log("refreshToken ",refreshToken )
+        } catch (e) {
+          error = e
+        }
         //response =`Usuario ${searchedUser.user} ya se encuentra registrado`
         response={
           userData: {
             id: 1,
-            fullName: "Ivo Veliz",
-            username: "Ivoveliz",
+            fullName: searchedUser.user,
+            username: searchedUser.user,
             avatar: "require('@/assets/images/avatars/13-small.png')",
-            email: "admin@demo.com",
-            role: "admin",
+            email: searchedUser.email,
+            role: searchedUser.role,
             ability: [
                 {
                     action: "manage",
@@ -124,8 +143,11 @@ router.get('/login', async function(req, res, next) {
                 "eCommerceCartItemsCount": 5
             }
         },
-        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.GtJvLZvyaHC9SjG06gjYx55PJrhkCPb8PVm5NY5S8aU",
-        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.7ppXQA-dJzAP8eA5dIs3yLZQmKZ74PMqJnonTmevF18"
+        accessToken:accessToken,
+        refreshToken:refreshToken,
+        access:"permited"
+        // accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.GtJvLZvyaHC9SjG06gjYx55PJrhkCPb8PVm5NY5S8aU",
+        // refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjczMzA1MTU2LCJleHAiOjE2NzMzMDU3NTZ9.7ppXQA-dJzAP8eA5dIs3yLZQmKZ74PMqJnonTmevF18"
         }
         
         

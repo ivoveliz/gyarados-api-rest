@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { uplink } = require('../models/index')
+const { uplink,downlink } = require('../models/index')
 const moment = require( 'moment-timezone' )
 let response
  
@@ -222,6 +222,170 @@ values:responseValue
     
             }
         }
+
+       res.send( response);
+  });
+
+  router.get('/exportDeviceValues', async function(req, res, next) {
+    const DataExportPdf=[]
+    const DataExportCsv=[]
+    let DateDesde
+    let DateHasta
+    console.log(req.query)
+    let DateExport =req.query.RangeDate
+    if(DateExport){
+        DateExport = DateExport.split("to")
+        DateDesde=moment(DateExport [0]).format('x');
+        console.log("desde",DateExport [0])
+        DateHasta=moment(DateExport [1]).format('x');
+        console.log("hasta",DateExport [1])
+        console.log("desde",DateDesde)
+        console.log("hasta",DateHasta)
+    }else{
+        DateHasta = Date.now() 
+        DateDesde= Math.round(DateHasta-86400000)  
+      
+      
+        console.log(DateHasta)
+    }
+   
+    
+    const keepAliveListTable = await uplink.find({created_at:{ "$gt": DateDesde, "$lt": DateHasta},deviceid: req.query.Device}).sort({ _id: -1 })
+    //console.log(DateDesde)
+    if(keepAliveListTable){     
+        for (const item of keepAliveListTable) 
+        {
+            count++;
+        let fechaT = item.created_at;
+            
+        let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+        let ValueDecodeTote =item.ValueDecodeTote*200
+         
+        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+        DataExportPdf.push([fechaC,ValueDecodeInstant,ValueDecodeTote])
+        DataExportCsv.push({Date:fechaC,Instant:ValueDecodeInstant,Totalizer:ValueDecodeTote})
+        //data2.push([fechaT, ValueDecodeTote])
+        //TableValues.push({ date:fechaC, ValueDecodeInstant,ValueDecodeTote,count });
+        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+  
+            }
+        }
+        DateConsult = Date.now() 
+        DateConsult =moment.utc(DateConsult ).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+         
+         
+        response={
+            DataExportPdf:DataExportPdf,
+            DataExportCsv:DataExportCsv,
+            DateConsult:DateConsult
+        }
+       res.send(response);
+  });
+
+  router.get('/DailyDeviceValues', async function(req, res, next) {
+    console.log(req.query)
+    count=0
+    countD=0
+    responseValue=[]
+    let TotalConsult
+    const series=[]
+    const series2=[]
+    const data1=[]
+    const data2=[]
+    const DataChart={}
+    const DataChartTotalize={}
+    const TableValues=[]
+    const TableValuesDownlinks=[]
+    const TimeStampToday=Date.now()
+    const TimeStampYesterday= Math.round(TimeStampToday-86400000)
+
+    const ConsultDateToday=moment.utc(TimeStampToday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    const ConsultDateYesterday=moment.utc(TimeStampYesterday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+    //const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
+    const keepAliveListTable = await uplink.find({deviceid: req.query.Device })
+    const DownlinksListTable = await downlink.find({deviceid: req.query.Device })
+    
+    if(keepAliveListTable){     
+        for (const item of keepAliveListTable) 
+        {
+            count++;
+        let fechaT = item.created_at;
+            
+        let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+        let ValueDecodeTote =item.ValueDecodeTote*200
+         
+        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+        data1.push([fechaT, ValueDecodeInstant])
+        data2.push([fechaT, ValueDecodeTote])
+        TableValues.push({ date:fechaC, ValueDecodeInstant,ValueDecodeTote,count });
+        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+            }
+
+            if(DownlinksListTable){     
+                for (const item of DownlinksListTable) 
+                {
+                    countD++;
+                let fechaT = item.created_at;
+                    
+                let payloadHex =item.payloadHex
+                let State =item.State
+                let VertionFirmware =item.VertionFirmware
+                 
+                let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+            
+                
+                TableValuesDownlinks.push({ date:fechaC,State ,payloadHex ,countD,VertionFirmware });
+                //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+                    }
+             
+                   
+                }else{
+                    TableValuesDownlinks=[]
+                }
+        series.push({name: 'Value m3/h :', data:data1})
+        series2.push({name: 'Value m3/h :', data:data2})
+      
+        DataChart.series=series
+        DataChartTotalize.series=series2
+        // const Entity=keepAliveListTable[0].Entity
+        const deviceid=keepAliveListTable[0].deviceid
+      
+        const State=keepAliveListTable[0].State
+        // const AnalogSignal=keepAliveListTable[0].AnalogSignal
+        // const RangeAnalogSignal=keepAliveListTable[0].RangeAnalogSignal
+        // const ProcessVariable=keepAliveListTable[0].ProcessVariable
+        // const RangeProcessVariable=keepAliveListTable[0].RangeProcessVariable
+        
+        response={
+        // Entity:Entity,
+        deviceid:deviceid,
+        State:State,
+        // AnalogSignal:AnalogSignal,
+        // RangeAnalogSignal:RangeAnalogSignal,
+        // ProcessVariable:ProcessVariable,
+        // RangeProcessVariable:RangeProcessVariable,
+        ConsultDateToday:ConsultDateToday,
+        ConsultDateYesterday:ConsultDateYesterday,
+        total:count,
+        totalD:countD,
+        TableValues:TableValues,
+        TableValuesDownlinks:TableValuesDownlinks,
+        DataChart:DataChart,
+        DataChartTotalize:DataChartTotalize
+        
+        } 
+           
+        }else{
+            response ={
+             Error:"dont entity register"
+    
+            }
+        }
+
+        //////////////////////////////////
 
        res.send( response);
   });

@@ -10,6 +10,11 @@ const organizationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type:Buffer,
+        contentType: String,
+        required: false
+        },
     AmountGroup: {
         type: String,
         required: true
