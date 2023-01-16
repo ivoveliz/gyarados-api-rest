@@ -42,8 +42,8 @@ router.post('/add', async function(req, res, next) {
         }
         let buffer3='data:image/png;base64,'+buffer2
         response ={
-          buffer2:buffer3,
-          base:req.body.MainGroupAdded.avatarGroup,
+          //buffer2:buffer3,
+          //base:req.body.MainGroupAdded.avatarGroup,
             NamePrimaryGroup: req.body.NamePrimaryGroup,
             IdGroup:req.body.IdGroup,
             SecondaryGroups:req.body.SecondaryGroups,
@@ -54,25 +54,40 @@ router.post('/add', async function(req, res, next) {
   res.send( response);
 });
 router.post('/update', async function(req, res, next) {
-
-  var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.NamePrimaryGroup,IdGroup:req.body.IdGroup})
+//console.log(req.body.MainGroupUpdate)
+  var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.MainGroupUpdate.NamePrimaryGroup,IdGroup:req.body.MainGroupUpdate.IdGroup})
         //console.log(req.body)
         if(searchedOrganization){
-           
-           if(searchedOrganization.NamePrimaryGroup!==req.body.NewNamePrimaryGroup ){
-            searchedOrganization.NamePrimaryGroup=req.body.NewNamePrimaryGroup
-           
-            searchedOrganization.markModified('NamePrimaryGroup')
+           if(req.body.MainGroupUpdate.NewNamePrimaryGroup){
+
+            if(searchedOrganization.NamePrimaryGroup!==req.body.MainGroupUpdate.NewNamePrimaryGroup ){
+              searchedOrganization.NamePrimaryGroup=req.body.MainGroupUpdate.NewNamePrimaryGroup
+             
+              searchedOrganization.markModified('NamePrimaryGroup')
+             }
            }
-           if(searchedOrganization.IdGroup!==req.body.NewIdGroup ){
-            searchedOrganization.IdGroup=req.body.NewIdGroup
+           if(req.body.MainGroupUpdate.NewIdGroup){
+           if(searchedOrganization.IdGroup!==req.body.MainGroupUpdate.NewIdGroup ){
+            searchedOrganization.IdGroup=req.body.MainGroupUpdate.NewIdGroup
            
             searchedOrganization.markModified('IdGroup')
            }
-           if(searchedOrganization.SecondaryGroups!==req.body.NewSecondaryGroups){
-            searchedOrganization.SecondaryGroups=req.body.NewSecondaryGroups
-            searchedOrganization.markModified('SecondaryGroups')
+          }
+
+           if(req.body.MainGroupUpdate.avatarGroup ){
+
+            const data = req.body.MainGroupUpdate.avatarGroup
+            const split = data.split(','); // or whatever is appropriate here. this will work for the example given
+            const base64string = split[1];
+            const buffer = Buffer.from(base64string, 'base64');
+            searchedOrganization.image=buffer 
+           
+            searchedOrganization.markModified('image')
            }
+          //  if(searchedOrganization.SecondaryGroups!==req.body.NewSecondaryGroups){
+          //   searchedOrganization.SecondaryGroups=req.body.NewSecondaryGroups
+          //   searchedOrganization.markModified('SecondaryGroups')
+          //  }
            
           searchedOrganization.save()
  response={
@@ -87,7 +102,7 @@ router.post('/update', async function(req, res, next) {
         res.send( response);
 });
 router.delete('/delete', async function(req, res, next) {
-
+//console.log(req)
   if(req.query.confirmation == "true"){
 
     const doc = await organization.findOneAndDelete({NamePrimaryGroup: req.query.NamePrimaryGroup})
