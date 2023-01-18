@@ -165,8 +165,8 @@ values:responseValue
     
     //const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
     const keepAliveListTable = await uplink.find({Entity: req.query.Entity })
- 
-    if(keepAliveListTable){     
+ console.log(keepAliveListTable.length)
+    if(keepAliveListTable.length>0){     
         for (const item of keepAliveListTable) 
         {
             count++;
