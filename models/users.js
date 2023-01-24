@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    LevelAccess: {
+        type: String,
+        required: true
+    },
+    ability: {
+        type: Object,
+        required: true
+    },
     created_at: {
         type: Number, 
         required: true, 

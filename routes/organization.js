@@ -105,57 +105,82 @@ EntityPass=true
   res.send(response);
 });
 router.post('/addDevice', async function(req, res, next) {
-
-  var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.AddEntity.MainGroupOrigin,IdGroup:req.body.AddEntity.IdGroupOrigin})
+//console.log(req.body.AddDevice)
+  var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.AddDevice.MainGroupOrigin,IdGroup:req.body.AddDevice.IdGroupOrigin})
 
   
-  const data = req.body.AddEntity.avatarEntity
+  const data = req.body.AddDevice.avatarDevice
   const split = data.split(','); // or whatever is appropriate here. this will work for the example given
   const base64string = split[1];
   const buffer = Buffer.from(base64string, 'base64');
   const buffer2= buffer.toString('base64')
-  let EntityPass=false
-  searchedOrganization.SecondaryGroups.forEach((rateName) => {  
+  let DevicePass=false
+  const Device=[]
+  let arraySelector =searchedOrganization.SecondaryGroups
+  let arrayFilter =searchedOrganization.SecondaryGroups
+
+  arraySelector  = arraySelector.filter(function( obj ) {
+  return obj.IdEntity == req.body.AddDevice.IdEntityOrigin;
+});
+//console.log(arraySelector[0].IdEntity)
+if(arraySelector.device){
+
+  console.log("hayyyy")
+}else{
+Device.push({IdDevice:req.body.AddDevice.IdDevice,NameDevice:req.body.AddDevice.NameDevice,State:req.body.AddDevice.State,avatarDevice:req.body.AddDevice.avatarDevice})
+arraySelector.Device=Device
+arrayFilter = arrayFilter.filter(function( obj ) {
+  return obj.IdEntity !== req.body.AddDevice.IdEntityOrigin;
+});
+arrayFilter.push({IdEntity:arraySelector[0].IdEntity,DestinyEntity:arraySelector[0].DestinyEntity,OriginEntity:arraySelector[0].OriginEntity,avatarEntity:arraySelector[0].avatarEntity,Device:Device})
+
+  searchedOrganization.SecondaryGroups=arrayFilter
+  searchedOrganization.markModified('SecondaryGroups')
+  searchedOrganization.save()  
+  
+}
+arrayFilter.forEach((rateName) => {  
    
-  if(rateName.IdEntity==req.body.AddEntity.IdEntity){
-console.log("se repite")
-EntityPass=true
-  } 
+//console.log(rateName)
+//   if(rateName.IdEntity==req.body.AddEntity.IdEntity){
+// console.log("se repite")
+// EntityPass=true
+//   } 
 
   })
-  console.log(EntityPass)
-  if(EntityPass==false){
- 
-            searchedOrganization.SecondaryGroups.push({IdEntity:req.body.AddEntity.IdEntity,DestinyEntity:req.body.AddEntity.DestinyEntity,OriginEntity:req.body.AddEntity.OriginEntity,avatarEntity:req.body.AddEntity.avatarEntity})
-            searchedOrganization.markModified('SecondaryGroups')
-            searchedOrganization.save()
+ // console.log(DevicePass)
+  // if(DevicePass==false){
+
+  // searchedOrganization.SecondaryGroups=arrayFilter
+  //           searchedOrganization.markModified('SecondaryGroups')
+  //           searchedOrganization.save()  
+
+  //           response={
+  //             IdEntity:req.body.AddEntity.IdEntity,
+  //             DestinyEntity:req.body.AddEntity.DestinyEntity,
+  //             OriginEntity:req.body.AddEntity.OriginEntity,
+  //             avatarEntity:req.body.AddEntity.avatarEntity,
+  //             StateEntity:"Added"
             
-            response={
-              IdEntity:req.body.AddEntity.IdEntity,
-              DestinyEntity:req.body.AddEntity.DestinyEntity,
-              OriginEntity:req.body.AddEntity.OriginEntity,
-              avatarEntity:req.body.AddEntity.avatarEntity,
-              StateEntity:"Added"
+  //            }
+
+  //         }else{
+
+
+  //           response={
+  //             IdEntity:req.body.AddEntity.IdEntity,
+  //             DestinyEntity:req.body.AddEntity.DestinyEntity,
+  //             OriginEntity:req.body.AddEntity.OriginEntity,
+  //             avatarEntity:req.body.AddEntity.avatarEntity,
+  //             StateEntity:"Exists"
             
-             }
+  //            }
 
-          }else{
-
-
-            response={
-              IdEntity:req.body.AddEntity.IdEntity,
-              DestinyEntity:req.body.AddEntity.DestinyEntity,
-              OriginEntity:req.body.AddEntity.OriginEntity,
-              avatarEntity:req.body.AddEntity.avatarEntity,
-              StateEntity:"Exists"
-            
-             }
-
-          }
+  //         }
  
   res.send(response);
 });
-router.post('/update', async function(req, res, next) {
+router.post('/updateMainGroup', async function(req, res, next) {
 //console.log(req.body.MainGroupUpdate)
   var searchedOrganization = await organization.findOne({ NamePrimaryGroup: req.body.MainGroupUpdate.NamePrimaryGroup,IdGroup:req.body.MainGroupUpdate.IdGroup})
         //console.log(req.body)
@@ -232,7 +257,7 @@ router.post('/updateEntity', async function(req, res, next) {
              res.send(response);
 
   });
-router.delete('/delete', async function(req, res, next) {
+router.delete('/deleteMainGroup', async function(req, res, next) {
 //console.log(req)
   if(req.query.confirmation == "true"){
 

@@ -85,6 +85,7 @@ total:TotalConsult,
 values:responseValue
 
 }
+
        res.send( response);
   });
 
@@ -165,7 +166,7 @@ values:responseValue
     
     //const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
     const keepAliveListTable = await uplink.find({Entity: req.query.Entity })
- console.log(keepAliveListTable.length)
+  
     if(keepAliveListTable.length>0){     
         for (const item of keepAliveListTable) 
         {
@@ -388,6 +389,100 @@ values:responseValue
         //////////////////////////////////
 
        res.send( response);
+  });
+  router.post('/EntityPageValues', async function(req, res, next) {
+    //console.log(req.body.MainGroupID)
+    const MainGroupValues=[]
+    
+
+    let count=0
+    let SearchValues=req.body.MainGroupID
+    for (const item of SearchValues) 
+    {
+        const series=[]
+        const data1=[]
+        let ValueDecodeTote
+        let ValueDecodeInstant
+        let created_last
+        let fechaC
+        const MaingGroupValuesFinal = await uplink.find({ Entity:item.IdEntity  }).sort({ _id: -1 }).limit(6)
+     
+        if(MaingGroupValuesFinal.length>0){
+        ValueDecodeTote= MaingGroupValuesFinal[0].ValueDecodeTote
+        ValueDecodeInstant= Math.round(MaingGroupValuesFinal[0].ValueDecodeInstant)
+        fechaC= MaingGroupValuesFinal[0].created_at
+        created_last= moment.utc(fechaC).tz('America/Santiago').format('DD/MM/YYYY-HH:mm');
+      
+        } 
+
+        MaingGroupValuesFinal.forEach((rateName) => { 
+           
+            let fechaT = rateName.created_at;
+                        
+            let ValueDecodeInstant =Math.round(rateName.ValueDecodeInstant)
+                       
+                         
+                        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+                    
+                        data1.push([fechaT, ValueDecodeInstant])
+                      
+                 
+                        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fechaC});  
+                        //console.log(data1)  
+                       
+       
+
+
+
+        })
+           
+        
+          series.push({name: 'Value m3/h :', data:data1})
+        //   console.log( item.IdEntity)
+        //   console.log(series)
+       
+       let DataChart={
+        series:series
+
+       }
+        MainGroupValues.push({IdEntity:item.IdEntity,DestinyEntity:item.DestinyEntity,OriginEntity:item.OriginEntity,avatarEntity:item.avatarEntity,series:DataChart,ValueDecodeTote:ValueDecodeTote,ValueDecodeInstant:ValueDecodeInstant,created_last:created_last})
+
+    }
+              
+    // SearchValues.forEach((rateName) => { 
+
+        // const MaingGroupValuesFinal = await uplink.find({ Entity:'L-500-POR-ANDINO' }).sort({ _id: -1 }).limit(6)
+        // console.log(MaingGroupValuesFinal )
+        //console.log(ResponseDB[0].ValueDecodeInstant)
+            
+                    // for (const item of ResponseDB) 
+                    // {
+             
+                    // let fechaT = item.created_at;
+                        
+                    // let ValueDecodeInstant =Math.round(item.ValueDecodeInstant)
+                   
+                     
+                    // let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+                
+                    // data1.push([fechaT, ValueDecodeInstant])
+                  
+             
+                    // //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+                    // console.log(data1)
+                
+                    //     }
+                    // series.push({name: 'Value m3/h :', data:data1})
+       
+      
+        
+        // console.log(rateName.IdEntity)
+        //MainGroupValues.push({IdEntity:rateName.IdEntity,DestinyEntity:rateName.DestinyEntity,OriginEntity:rateName.OriginEntit,avatarEntity:rateName.avatarEntity,series:series})
+
+    // })
+
+
+       res.send(MainGroupValues);
   });
   module.exports = router;
   

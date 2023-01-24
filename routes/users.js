@@ -19,7 +19,9 @@ router.post('/add', async function(req, res, next) {
     email:req.body.email,
     password:req.body.password,
     state:req.body.state,
-    role:req.body.role
+    role:req.body.role,
+    ability:req.body.ability,
+    LevelAccess:req.body.LevelAccess
     })
   var searchedUser = await users.findOne({ user: req.body.user})
 
@@ -32,6 +34,8 @@ router.post('/add', async function(req, res, next) {
         password:req.body.password,
         state:req.body.state,
         role:req.body.role,
+        ability:req.body.ability,
+        LevelAccess:req.body.LevelAccess,
             StatusUser:"exists"
     
         }
@@ -51,6 +55,8 @@ router.post('/add', async function(req, res, next) {
             password:req.body.password,
             state:req.body.state,
             role:req.body.role,
+            ability:req.body.ability,
+            LevelAccess:req.body.LevelAccess,
             StatusUser:"aggregate"
     
         }
@@ -64,20 +70,26 @@ router.post('/update', async function(req, res, next) {
     email:req.body.email,
     password:req.body.password,
     state:req.body.state,
-    role:req.body.role
+    role:req.body.role,
+    ability:req.body.ability,
+    LevelAccess:req.body.LevelAccess
     })
     const doc = await users.findOne({ NameGroup: req.body.user })
     doc.user=req.body.user,
     doc.email=req.body.email,
     doc.password=req.body.password,
     doc.state=req.body.state,
-    doc.role=req.body.role
+    doc.role=req.body.role,
+    doc.ability=req.body.ability,
+    doc.LevelAccess=req.body.LevelAccess,
     
     doc.markModified('use')
     doc.markModified('email')
     doc.markModified('password')
     doc.markModified('state')
     doc.markModified('role')
+    doc.markModified('ability')
+    doc.markModified('LevelAccess')
     doc.save()
 
     response={
@@ -87,6 +99,8 @@ router.post('/update', async function(req, res, next) {
         password:req.body.password,
         state:req.body.state,
         role:req.body.role,
+        ability:req.body.ability,
+        LevelAccess:req.body.LevelAccess,
         StatusUser:"update"
 
     }
@@ -100,7 +114,9 @@ router.get('/login', async function(req, res, next) {
     email:req.query.email,
     password:req.query.password,
     state:req.query.state,
-    role:req.query.role
+    role:req.query.role,
+    ability:req.body.ability,
+    LevelAccess:req.body.LevelAccess
     })
 
     
@@ -133,15 +149,8 @@ router.get('/login', async function(req, res, next) {
             avatar: "require('@/assets/images/avatars/13-small.png')",
             email: searchedUser.email,
             role: searchedUser.role,
-            ability: [
-                {
-                    action: "manage",
-                    subject: "all"
-                }
-            ],
-            extras: {
-                "eCommerceCartItemsCount": 5
-            }
+            LevelAccess: searchedUser.LevelAccess,
+            ability: searchedUser.ability
         },
         accessToken:accessToken,
         refreshToken:refreshToken,
