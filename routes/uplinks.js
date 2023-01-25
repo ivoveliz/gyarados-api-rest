@@ -190,22 +190,22 @@ values:responseValue
       
         DataChart.series=series
         DataChartTotalize.series=series2
-        const Entity=keepAliveListTable[0].Entity
-        const deviceid=keepAliveListTable[0].deviceid
-        const State=keepAliveListTable[0].State
-        const AnalogSignal=keepAliveListTable[0].AnalogSignal
-        const RangeAnalogSignal=keepAliveListTable[0].RangeAnalogSignal
-        const ProcessVariable=keepAliveListTable[0].ProcessVariable
-        const RangeProcessVariable=keepAliveListTable[0].RangeProcessVariable
+        // const Entity=keepAliveListTable[0].Entity
+        // const deviceid=keepAliveListTable[0].deviceid
+        // const State=keepAliveListTable[0].State
+        // const AnalogSignal=keepAliveListTable[0].AnalogSignal
+        // const RangeAnalogSignal=keepAliveListTable[0].RangeAnalogSignal
+        // const ProcessVariable=keepAliveListTable[0].ProcessVariable
+        // const RangeProcessVariable=keepAliveListTable[0].RangeProcessVariable
         
         response={
-        Entity:Entity,
-        deviceid:deviceid,
-        State:State,
-        AnalogSignal:AnalogSignal,
-        RangeAnalogSignal:RangeAnalogSignal,
-        ProcessVariable:ProcessVariable,
-        RangeProcessVariable:RangeProcessVariable,
+        // Entity:Entity,
+        // deviceid:deviceid,
+        // State:State,
+        // AnalogSignal:AnalogSignal,
+        // RangeAnalogSignal:RangeAnalogSignal,
+        // ProcessVariable:ProcessVariable,
+        // RangeProcessVariable:RangeProcessVariable,
         ConsultDateToday:ConsultDateToday,
         ConsultDateYesterday:ConsultDateYesterday,
         total:count,
@@ -445,7 +445,7 @@ values:responseValue
         series:series
 
        }
-        MainGroupValues.push({IdEntity:item.IdEntity,DestinyEntity:item.DestinyEntity,OriginEntity:item.OriginEntity,avatarEntity:item.avatarEntity,series:DataChart,ValueDecodeTote:ValueDecodeTote,ValueDecodeInstant:ValueDecodeInstant,created_last:created_last})
+        MainGroupValues.push({IdEntity:item.IdEntity,DestinyEntity:item.DestinyEntity,OriginEntity:item.OriginEntity,avatarEntity:item.avatarEntity,Device:item.Device,series:DataChart,ValueDecodeTote:ValueDecodeTote,ValueDecodeInstant:ValueDecodeInstant,created_last:created_last})
 
     }
               
