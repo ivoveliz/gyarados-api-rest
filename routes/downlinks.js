@@ -5,7 +5,7 @@ const moment = require( 'moment-timezone' )
 let response
  
 router.post('/SendDownlink', async function(req, res, next) {
-  console.log(req.body.params)
+  //console.log(req.body.params)
     const Savedownlink=new downlink({
         deviceid:req.body.params.Device,
         payloadHex:req.body.params.DownlinkMessage,

@@ -92,24 +92,29 @@ values:responseValue
   router.get('/exportValues', async function(req, res, next) {
     const DataExportPdf=[]
     const DataExportCsv=[]
-    let DateDesde
+    let DateDesde 
     let DateHasta
-    console.log(req.query)
-    let DateExport =req.query.RangeDate
-    if(DateExport){
-        DateExport = DateExport.split("to")
-        DateDesde=moment(DateExport [0]).format('x');
-        console.log("desde",DateExport [0])
-        DateHasta=moment(DateExport [1]).format('x');
-        console.log("hasta",DateExport [1])
-        console.log("desde",DateDesde)
-        console.log("hasta",DateHasta)
+ 
+ 
+    // console.log(req.query)
+    //let DateExport =req.query.RangeDate
+    if(req.query.rangeBefore){
+        //DateExport = DateExport.split("to")
+        //DateDesde=moment(req.query.rangeBefore).format('x');
+        //console.log("desde",DateDesde)
+        DateDesde=Date.parse(moment.tz(req.query.rangeBefore, "America/Santiago").format('x'))
+        //var b = Date.parse(moment.tz(req.query.rangeAfter, "America/Santiago").format('x'))
+        DateHasta=Date.parse(moment.tz(req.query.rangeAfter, "America/Santiago").format('x'))
+        //DateHasta=moment(req.query.rangeAfter).format('x');
+          
+        // console.log("desde",DateDesde)
+        //  console.log("hasta",DateHasta)
     }else{
         DateHasta = Date.now() 
         DateDesde= Math.round(DateHasta-86400000)  
       
       
-        console.log(DateHasta)
+        // console.log(DateHasta)
     }
    
     
@@ -118,7 +123,7 @@ values:responseValue
     if(keepAliveListTable){     
         for (const item of keepAliveListTable) 
         {
-            count++;
+            //count++;
         let fechaT = item.created_at;
             
         let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
@@ -147,7 +152,7 @@ values:responseValue
   });
 
   router.get('/DailyValues', async function(req, res, next) {
-    console.log(req.query)
+    // console.log(req.query)
     count=0
     responseValue=[]
     let TotalConsult
@@ -226,28 +231,108 @@ values:responseValue
 
        res.send( response);
   });
+  router.get('/MobileDailyValues', async function(req, res, next) {
+    // console.log(req.query)
+    count=0
+    responseValue=[]
+    let TotalConsult
+    const series=[]
+    const series2=[]
+    const data1=[]
+    const data2=[]
+    const DataChart={}
+    const DataChartTotalize={}
+    const TableValues=[]
+    const TimeStampToday=Date.now()
+    const TimeStampYesterday= Math.round(TimeStampToday-86400000)
+
+    const ConsultDateToday=moment.utc(TimeStampToday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    const ConsultDateYesterday=moment.utc(TimeStampYesterday).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+    //const keepAliveListTable = await uplink.find({created_at:{ "$gt": TimeStampYesterday, "$lt": TimeStampToday},Entity: req.query.Entity })
+    const keepAliveListTable = await uplink.find({Entity: req.query.Entity }).limit(20)
+  
+    if(keepAliveListTable.length>0){     
+        for (const item of keepAliveListTable) 
+        {
+            count++;
+        let fechaT = item.created_at;
+            
+        let ValueDecodeInstant  =Math.round(item.ValueDecodeInstant)
+        let ValueDecodeTote =item.ValueDecodeTote*200
+         
+        let fechaC= moment.utc(fechaT).tz('America/Santiago').format('DD/MM/YYYY-HH:mm:ss.SSS');
+    
+        data1.push([fechaT, ValueDecodeInstant])
+        data2.push([fechaT, ValueDecodeTote])
+        TableValues.push({ date:fechaC, ValueDecodeInstant,ValueDecodeTote,count });
+        //responseValue.push({ValueDecodeInstant,ValueDecodeTote,created_at:fecha4});  
+        
+    
+            }
+        series.push({name: 'Value m3/h :', data:data1})
+        series2.push({name: 'Value m3/h :', data:data2})
+      
+        DataChart.series=series
+        DataChartTotalize.series=series2
+        // const Entity=keepAliveListTable[0].Entity
+        // const deviceid=keepAliveListTable[0].deviceid
+        // const State=keepAliveListTable[0].State
+        // const AnalogSignal=keepAliveListTable[0].AnalogSignal
+        // const RangeAnalogSignal=keepAliveListTable[0].RangeAnalogSignal
+        // const ProcessVariable=keepAliveListTable[0].ProcessVariable
+        // const RangeProcessVariable=keepAliveListTable[0].RangeProcessVariable
+        
+        response={
+        // Entity:Entity,
+        // deviceid:deviceid,
+        // State:State,
+        // AnalogSignal:AnalogSignal,
+        // RangeAnalogSignal:RangeAnalogSignal,
+        // ProcessVariable:ProcessVariable,
+        // RangeProcessVariable:RangeProcessVariable,
+        ConsultDateToday:ConsultDateToday,
+        ConsultDateYesterday:ConsultDateYesterday,
+        total:count,
+        TableValues:TableValues,
+        DataChart:DataChart,
+        DataChartTotalize:DataChartTotalize
+        
+        } 
+           
+        }else{
+    
+         
+            response ={
+             Error:"dont entity register"
+    
+            }
+        }
+
+       res.send( response);
+  });
 
   router.get('/exportDeviceValues', async function(req, res, next) {
     const DataExportPdf=[]
     const DataExportCsv=[]
     let DateDesde
     let DateHasta
-    console.log(req.query)
+    // console.log(req.query)
     let DateExport =req.query.RangeDate
     if(DateExport){
         DateExport = DateExport.split("to")
         DateDesde=moment(DateExport [0]).format('x');
-        console.log("desde",DateExport [0])
+        // console.log("desde",DateExport [0])
         DateHasta=moment(DateExport [1]).format('x');
-        console.log("hasta",DateExport [1])
-        console.log("desde",DateDesde)
-        console.log("hasta",DateHasta)
+        // console.log("hasta",DateExport [1])
+        // console.log("desde",DateDesde)
+        // console.log("hasta",DateHasta)
     }else{
         DateHasta = Date.now() 
         DateDesde= Math.round(DateHasta-86400000)  
       
       
-        console.log(DateHasta)
+        // console.log(DateHasta)
     }
    
     
@@ -285,7 +370,7 @@ values:responseValue
   });
 
   router.get('/DailyDeviceValues', async function(req, res, next) {
-    console.log(req.query)
+    // console.log(req.query)
     count=0
     countD=0
     responseValue=[]
@@ -445,7 +530,7 @@ values:responseValue
         series:series
 
        }
-        MainGroupValues.push({IdEntity:item.IdEntity,DestinyEntity:item.DestinyEntity,OriginEntity:item.OriginEntity,avatarEntity:item.avatarEntity,Device:item.Device,series:DataChart,ValueDecodeTote:ValueDecodeTote,ValueDecodeInstant:ValueDecodeInstant,created_last:created_last})
+        MainGroupValues.push({IdEntity:item.IdEntity,DestinyEntity:item.DestinyEntity,OriginEntity:item.OriginEntity,ImageEntity:item.ImageEntity,Device:item.Device,series:DataChart,ValueDecodeTote:ValueDecodeTote,ValueDecodeInstant:ValueDecodeInstant,created_last:created_last})
 
     }
               

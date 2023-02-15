@@ -6,8 +6,8 @@ let response
 const accessToken=""
 const refreshToken=""
 const jwtConfig = {
-  secret: 'dd5f3089-40c3-403d-af14-d0c228b05cb4',
-  refreshTokenSecret: '7c4c1c50-3230-45bf-9eae-c9b2e401c767',
+  secret: process.env.SECRETJWT,
+  refreshTokenSecret: process.env.REFRESHTOKENSECRET,
   expireTime: '10m',
   refreshTokenExpireTime: '10m',
 }
@@ -120,7 +120,7 @@ router.get('/login', async function(req, res, next) {
     })
 
     
- console.log(req.query)
+//  console.log(req.query)
     var searchedUser = await users.findOne({ email: req.query.email,password:req.query.password})
 
     // If the device already exists in the database, we add a error message to the session and redirect to the device list
