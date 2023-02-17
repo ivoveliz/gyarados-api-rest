@@ -96,15 +96,15 @@ values:responseValue
     let DateHasta
  
  
-    // console.log(req.query)
+    console.log(req.query)
     //let DateExport =req.query.RangeDate
     if(req.query.rangeBefore){
         //DateExport = DateExport.split("to")
         //DateDesde=moment(req.query.rangeBefore).format('x');
         //console.log("desde",DateDesde)
-        DateDesde=Date.parse(moment.tz(req.query.rangeBefore, "America/Santiago").format('x'))
+        DateDesde=moment.tz(req.query.rangeBefore, "America/Santiago").format('x')
         //var b = Date.parse(moment.tz(req.query.rangeAfter, "America/Santiago").format('x'))
-        DateHasta=Date.parse(moment.tz(req.query.rangeAfter, "America/Santiago").format('x'))
+        DateHasta=moment.tz(req.query.rangeAfter, "America/Santiago").format('x')
         //DateHasta=moment(req.query.rangeAfter).format('x');
           
         // console.log("desde",DateDesde)
